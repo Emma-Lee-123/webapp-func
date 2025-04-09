@@ -1,0 +1,62 @@
+-- Description: SQL script to create the tables in the database
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[users](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[name] [varchar](255) NOT NULL,
+	[email] [varchar](255) NOT NULL,
+	[password] [varchar](255) NOT NULL,
+	[createdat] [datetime] NOT NULL,
+ CONSTRAINT [PK_users] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[users] ADD  CONSTRAINT [DF_users_createdat]  DEFAULT (getdate()) FOR [createdat]
+GO
+--------------------------
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[tasks](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[name] [varchar](255) NOT NULL,
+	[category] [varchar](50) NOT NULL,
+	[userid] [int] NOT NULL,
+	[completed] [bit] NOT NULL,
+	[createdat] [datetime] NOT NULL,
+	[modifiedat] [datetime] NOT NULL,
+ CONSTRAINT [PK_tasks_1] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tasks] ADD  CONSTRAINT [DF_tasks_completed]  DEFAULT ((0)) FOR [completed]
+GO
+
+ALTER TABLE [dbo].[tasks] ADD  CONSTRAINT [DF_tasks_createdat_1]  DEFAULT (getdate()) FOR [createdat]
+GO
+
+ALTER TABLE [dbo].[tasks] ADD  CONSTRAINT [DF_tasks_modifiedat_1]  DEFAULT (getdate()) FOR [modifiedat]
+GO
+
+ALTER TABLE [dbo].[tasks]  WITH CHECK ADD  CONSTRAINT [FK_users_tasks] FOREIGN KEY([userid])
+REFERENCES [dbo].[users] ([id])
+GO
+
+ALTER TABLE [dbo].[tasks] CHECK CONSTRAINT [FK_users_tasks]
+GO
+
+
